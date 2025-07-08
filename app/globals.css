@@ -1,0 +1,207 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Earthy color palette for calm mind */
+    --background: 45 15% 97%; /* Warm off-white */
+    --foreground: 25 25% 15%; /* Deep earth brown */
+
+    --card: 40 20% 95%; /* Light warm beige */
+    --card-foreground: 25 25% 15%;
+
+    --popover: 40 20% 95%;
+    --popover-foreground: 25 25% 15%;
+
+    --primary: 25 45% 35%; /* Rich earth brown */
+    --primary-foreground: 45 15% 97%;
+
+    --secondary: 35 25% 85%; /* Soft sand */
+    --secondary-foreground: 25 25% 25%;
+
+    --muted: 35 20% 90%; /* Light sage */
+    --muted-foreground: 25 15% 45%;
+
+    --accent: 85 35% 75%; /* Soft sage green */
+    --accent-foreground: 25 25% 15%;
+
+    --destructive: 0 65% 55%; /* Muted red clay */
+    --destructive-foreground: 45 15% 97%;
+
+    --border: 35 20% 85%;
+    --input: 35 20% 90%;
+    --ring: 25 45% 35%;
+
+    --radius: 0.75rem;
+
+    /* Custom earthy colors */
+    --sage: 85 25% 65%;
+    --terracotta: 15 55% 65%;
+    --moss: 95 25% 45%;
+    --sand: 40 30% 80%;
+    --clay: 20 35% 55%;
+    --stone: 30 10% 70%;
+  }
+
+  .dark {
+    --background: 25 25% 8%; /* Deep earth */
+    --foreground: 45 15% 90%;
+
+    --card: 25 20% 12%;
+    --card-foreground: 45 15% 90%;
+
+    --popover: 25 20% 12%;
+    --popover-foreground: 45 15% 90%;
+
+    --primary: 85 35% 65%; /* Sage in dark mode */
+    --primary-foreground: 25 25% 8%;
+
+    --secondary: 25 15% 20%;
+    --secondary-foreground: 45 15% 80%;
+
+    --muted: 25 15% 18%;
+    --muted-foreground: 45 10% 60%;
+
+    --accent: 85 25% 25%;
+    --accent-foreground: 45 15% 90%;
+
+    --destructive: 0 55% 45%;
+    --destructive-foreground: 45 15% 90%;
+
+    --border: 25 15% 20%;
+    --input: 25 15% 18%;
+    --ring: 85 35% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* Better text rendering */
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Responsive font sizes */
+  @media (min-width: 640px) {
+    body {
+      font-size: 16px;
+    }
+  }
+}
+
+/* Custom animations for calm feeling */
+@keyframes gentle-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes soft-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(133, 153, 133, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(133, 153, 133, 0.5);
+  }
+}
+
+@keyframes gentle-fade {
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.gentle-pulse {
+  animation: gentle-pulse 2s ease-in-out infinite;
+}
+
+.soft-glow {
+  animation: soft-glow 3s ease-in-out infinite;
+}
+
+/* Smooth transitions */
+* {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Enhanced text wrapping */
+.break-words {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--sage));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--moss));
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .space-y-6 > * + * {
+    margin-top: 1rem;
+  }
+
+  /* Better touch targets */
+  button {
+    min-height: 44px;
+  }
+
+  input {
+    min-height: 44px;
+  }
+}
+
+/* Smooth focus states */
+input:focus,
+button:focus {
+  outline: 2px solid hsl(var(--sage));
+  outline-offset: 2px;
+}
+
+/* Loading animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
