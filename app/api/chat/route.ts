@@ -63,27 +63,29 @@ export async function POST(request: NextRequest) {
     // Track request start time for performance monitoring
     const startTime = Date.now()
 
-    // Generate response using LLM service with retry logic
-    const response = await llmService.generateResponse({
+    // Generate response using LLM service with retry logic. The service returns the text and model used.
+    const result = await llmService.generateResponse({
       message,
       context,
       systemPrompt,
       history: history || [],
     })
+    const response = result.text
+    const usedModel = result.model
 
     // Track performance and costs
     const processingTime = Date.now() - startTime
 
     // Estimate token usage (rough approximation)
     const inputTokens = Math.ceil((message + context + systemPrompt).length / 4)
-    const outputTokens = Math.ceil(response.length / 4)
+  const outputTokens = Math.ceil(response.length / 4)
 
-    // Track costs
-    const costInfo = costTracker.trackRequest(identifier, "gemini-1.5-flash", inputTokens, outputTokens)
+  // Track costs using the actual model used by the LLM service
+  const costInfo = costTracker.trackRequest(identifier, usedModel, inputTokens, outputTokens)
 
     // Log request for monitoring
     console.log(
-      `LLM Request - IP: ${identifier}, Domain: ${domain}, Processing: ${processingTime}ms, Cost: $${costInfo.requestCost.toFixed(6)}`,
+      `LLM Request - IP: ${identifier}, Domain: ${domain}, Model: ${usedModel}, Processing: ${processingTime}ms, Cost: $${costInfo.requestCost.toFixed(6)}`,
     )
 
     // Check daily cost limits (optional - implement based on your needs)
@@ -103,6 +105,7 @@ export async function POST(request: NextRequest) {
       response,
       metadata: {
         processingTime,
+        model: usedModel,
         estimatedCost: costInfo.requestCost.toFixed(6),
         dailyUsage: {
           cost: dailyCost.totalCost.toFixed(4),

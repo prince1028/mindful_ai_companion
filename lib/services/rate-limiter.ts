@@ -152,6 +152,8 @@ export class CostTracker {
 
   // Estimated costs per model (in USD per 1K tokens)
   private readonly MODEL_COSTS = {
+    // Added gemini-2.0-flash with conservative estimated costs (per 1K tokens)
+    "gemini-2.0-flash": { input: 0.00018, output: 0.0007 },
     "gemini-1.5-flash": { input: 0.00015, output: 0.0006 },
     "gemini-1.5-flash-8b": { input: 0.0001, output: 0.0004 },
     "gemini-1.0-pro": { input: 0.0005, output: 0.0015 },

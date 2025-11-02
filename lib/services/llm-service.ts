@@ -7,7 +7,8 @@ interface GenerateResponseParams {
 
 export class LLMService {
   private apiKey: string
-  private availableModels = ["gemini-1.5-flash", "gemini-1.5-flash-8b", "gemini-1.0-pro"]
+  // Prefer Gemini 2.0 Flash first, fall back to older models if necessary
+  private availableModels = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.0-pro"]
 
   constructor() {
     this.apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY || ""
@@ -17,12 +18,14 @@ export class LLMService {
     }
   }
 
-  async generateResponse(params: GenerateResponseParams): Promise<string> {
+  // Returns the generated text and the model used so callers can track costs accurately
+  async generateResponse(params: GenerateResponseParams): Promise<{ text: string; model: string }> {
     // Try multiple models with retry logic
     for (const modelName of this.availableModels) {
       try {
         console.log(`Trying model: ${modelName}`)
-        return await this.generateWithRetry(params, modelName)
+        const text = await this.generateWithRetry(params, modelName)
+        return { text, model: modelName }
       } catch (error) {
         console.warn(`Model ${modelName} failed:`, error)
         // Continue to next model
@@ -128,6 +131,16 @@ export class LLMService {
         errorData = JSON.parse(errorText)
       } catch {
         errorData = { error: { message: errorText } }
+      }
+
+      // Log full error details to help diagnose failures from the Generative Language API
+      // This is server-side logging only and will not be exposed to clients.
+      try {
+        console.error(`[LLMService] API error ${response.status} for ${modelName}:`, errorData)
+        console.error(`[LLMService] Raw response for ${modelName}:`, errorText)
+      } catch (logErr) {
+        // Swallow logging errors to avoid masking the original error
+        console.error('[LLMService] Failed to log API error details', logErr)
       }
 
       // Handle specific error codes
